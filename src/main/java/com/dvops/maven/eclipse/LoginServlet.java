@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -51,11 +52,16 @@ public class LoginServlet extends HttpServlet {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-                response.sendRedirect("userdashboard.jsp");
-            } else {
-        		PrintWriter out = response.getWriter();
-                out.println("<h3 style='color:red;'>Invalid email or password. Please try again.</h3>");
-            }
+			    HttpSession session = request.getSession(); 
+			    session.setAttribute("email", email); 
+
+			    response.sendRedirect("userdashboard.jsp");
+			} else {
+			    PrintWriter out = response.getWriter();
+			    out.println("<h3 style='color:red;'>Invalid email or password. Please try again.</h3>");
+			}
+
+
 			
 			rs.close();
             ps.close();
