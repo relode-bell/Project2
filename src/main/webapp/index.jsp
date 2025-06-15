@@ -4,9 +4,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>HR</title>
 </head>
 <body>
-<h1>Test</h1>
+	<h1>Welcome to the HR Attendance System</h1>
+	
+    <ul>
+        <li><a href="login.jsp">Login</a></li>
+        <li><a href="register.jsp">Register</a></li>
+    </ul>
+    
 </body>
 </html>
