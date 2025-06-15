@@ -66,7 +66,8 @@ public class LoginServlet extends HttpServlet {
 			rs.close();
             ps.close();
             con.close();
-			
+           
+
 			}
 			//Step 8: catch and print out any exception
 			catch (Exception exception) {

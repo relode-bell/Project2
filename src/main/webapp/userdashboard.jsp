@@ -9,8 +9,8 @@
 <body>
    <h1>Welcome</h1>
     <ul>
-        <li><a href="checkinout.jsp">Check In / Out</a></li>
-        <li><a href="attendancehistory.jsp">Attendance History</a></li>
+        <li><a href="CheckInOutServlet">Check In / Out</a></li>
+        <li><a href="AttendanceHistoryServlet">Attendance Page</a></li>
     </ul>
 </body>
 </html>
