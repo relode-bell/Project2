@@ -51,16 +51,17 @@ public class AttendanceHistoryServlet extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project2", "root", "1234");
 
-            String sql = "SELECT DATE(checkin_time) AS date, TIME(checkin_time) AS checkin, TIME(checkout_time) AS checkout FROM attendance WHERE email = ?";
+            // Modified SQL to include email and format times properly
+            String sql = "SELECT email, TIME(checkin_time) AS checkin, TIME(checkout_time) AS checkout FROM attendance WHERE email = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 attendanceList.add(new AttendanceHistory(
-                        rs.getString("date"),
-                        rs.getString("checkin"),
-                        rs.getString("checkout")));
+                        rs.getString("email"),     // Now correctly passing email
+                        rs.getString("checkin"),   // Check-in time
+                        rs.getString("checkout"))); // Check-out time
             }
 
             rs.close();
