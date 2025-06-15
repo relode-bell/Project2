@@ -13,7 +13,6 @@ public class Attendance {
         this.checkOutTime = checkOut;
     }
 
-    // Optional: getters
     public String getEmail() { return email; }
     public Timestamp getCheckInTime() { return checkInTime; }
     public Timestamp getCheckOutTime() { return checkOutTime; }

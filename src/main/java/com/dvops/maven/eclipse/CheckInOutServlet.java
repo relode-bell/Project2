@@ -1,4 +1,3 @@
-
 package com.dvops.maven.eclipse;
 
 import java.io.IOException;
@@ -51,9 +50,9 @@ public class CheckInOutServlet extends HttpServlet {
     	        }
 
     	        con.close();
-    	    } catch (Exception e) {
-    	        e.printStackTrace();
-    	    }
+    	    } catch (Exception exception) {
+				System.out.println(exception);
+			}
 
     	    if (attendance != null) {
     	        request.setAttribute("status", (attendance.getCheckOutTime() == null) ? "Checked In" : "Checked Out");

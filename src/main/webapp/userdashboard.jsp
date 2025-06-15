@@ -10,7 +10,7 @@
    <h1>Welcome</h1>
     <ul>
         <li><a href="CheckInOutServlet">Check In / Out</a></li>
-        <li><a href="AttendanceHistoryServlet">Attendance Page</a></li>
+        <li><a href="AttendanceHistory">Attendance Page</a></li>
     </ul>
 </body>
 </html>
