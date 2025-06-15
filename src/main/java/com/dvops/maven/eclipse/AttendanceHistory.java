@@ -3,14 +3,21 @@ package com.dvops.maven.eclipse;
 public class AttendanceHistory {
     private String email;
     private String status;
-    private String date;
+    private String checkInTime;
+    private String checkOutTime;
 
-    public AttendanceHistory() {}
-
-    public AttendanceHistory(String email, String status, String date) {
+    public AttendanceHistory(String email, String checkInTime, String checkOutTime) {
         this.email = email;
-        this.status = status;
-        this.date = date;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+
+        if (checkInTime != null && checkOutTime == null) {
+            this.status = "Checked In";
+        } else if (checkInTime != null && checkOutTime != null) {
+            this.status = "Checked Out";
+        } else {
+            this.status = "Not Checked In";
+        }
     }
 
     public String getEmail() {
@@ -21,19 +28,11 @@ public class AttendanceHistory {
         return status;
     }
 
-    public String getDate() {
-        return date;
+    public String getCheckInTime() {
+        return checkInTime;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public String getCheckOutTime() {
+        return checkOutTime;
     }
 }

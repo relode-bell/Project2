@@ -24,94 +24,107 @@ public class CheckInOutServlet extends HttpServlet {
         super();
     }
 
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    	    throws ServletException, IOException {
+            throws ServletException, IOException {
 
-    	    HttpSession session = request.getSession();
-    	    String email = (String) session.getAttribute("email");
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
 
-    	    Attendance attendance = null;
+        Attendance attendance = null;
 
-    	    try {
-    	        Class.forName("com.mysql.jdbc.Driver");
-    	        Connection con = DriverManager.getConnection(
-    	            "jdbc:mysql://localhost:3306/project2", "root", "1234");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/project2", "root", "1234");
 
-    	        PreparedStatement ps = con.prepareStatement(
-    	            "SELECT * FROM attendance WHERE email = ? ORDER BY id DESC LIMIT 1");
-    	        ps.setString(1, email);
-    	        ResultSet rs = ps.executeQuery();
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT * FROM attendance WHERE email = ? ORDER BY id DESC LIMIT 1");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
 
-    	        if (rs.next()) {
-    	            Timestamp checkIn = rs.getTimestamp("checkin_time");
-    	            Timestamp checkOut = rs.getTimestamp("checkout_time");
-    	            attendance = new Attendance(email, checkIn, checkOut);
-    	        }
+            if (rs.next()) {
+                Timestamp checkIn = rs.getTimestamp("checkin_time");
+                Timestamp checkOut = rs.getTimestamp("checkout_time");
 
-    	        con.close();
-    	    } catch (Exception exception) {
-				System.out.println(exception);
-			}
+                attendance = new Attendance(email, checkIn, checkOut);
 
-    	    if (attendance != null) {
-    	        request.setAttribute("status", (attendance.getCheckOutTime() == null) ? "Checked In" : "Checked Out");
-    	        request.setAttribute("checkinDisplay", attendance.getCheckInTime());
-    	        request.setAttribute("checkoutDisplay", attendance.getCheckOutTime());
-    	    } else {
-    	        request.setAttribute("status", "Not Checked In");
-    	    }
+                request.setAttribute("status", attendance.getStatus());
+                request.setAttribute("checkinDisplay", attendance.getCheckInDisplay());
+                request.setAttribute("checkoutDisplay", attendance.getCheckOutDisplay());
+            } else {
+                request.setAttribute("status", "Not Checked In");
+            }
 
-    	    // Show correct button
-    	    request.setAttribute("showCheckIn", attendance == null || attendance.getCheckOutTime() != null);
-    	    request.setAttribute("showCheckOut", attendance != null && attendance.getCheckOutTime() == null);
+            rs.close();
+            ps.close();
+            con.close();
 
-    	    request.setAttribute("email", email);
-    	    request.getRequestDispatcher("checkinout.jsp").forward(request, response);
-    	}
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
+        // Decide which button to show
+        request.setAttribute("showCheckIn", attendance == null || attendance.getCheckOut() != null);
+        request.setAttribute("showCheckOut", attendance != null && attendance.getCheckOut() == null);
 
+        request.setAttribute("email", email);
+        request.getRequestDispatcher("checkinout.jsp").forward(request, response);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-            HttpSession session = request.getSession(false);
-            String email = (String) session.getAttribute("email");
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
 
-            if (email == null) {
-                response.sendRedirect("login.jsp");
-                return;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project2", "root", "1234");
+
+            // Check latest entry
+            PreparedStatement psCheck = con.prepareStatement(
+                "SELECT * FROM attendance WHERE email = ? ORDER BY id DESC LIMIT 1");
+            psCheck.setString(1, email);
+            ResultSet rs = psCheck.executeQuery();
+
+            if (rs.next()) {
+                Timestamp checkIn = rs.getTimestamp("checkin_time");
+                Timestamp checkOut = rs.getTimestamp("checkout_time");
+
+                if (checkIn != null && checkOut == null) {
+                    // User is currently checked in → update checkout_time
+                    PreparedStatement psUpdate = con.prepareStatement(
+                        "UPDATE attendance SET checkout_time = CURRENT_TIMESTAMP WHERE id = ?");
+                    psUpdate.setInt(1, rs.getInt("id"));
+                    psUpdate.executeUpdate();
+                    psUpdate.close();
+                } else {
+                    // Already checked out → new check-in
+                    PreparedStatement psInsert = con.prepareStatement(
+                        "INSERT INTO attendance (email, checkin_time) VALUES (?, CURRENT_TIMESTAMP)");
+                    psInsert.setString(1, email);
+                    psInsert.executeUpdate();
+                    psInsert.close();
+                }
+            } else {
+                // No previous record → check in
+                PreparedStatement psInsert = con.prepareStatement(
+                    "INSERT INTO attendance (email, checkin_time) VALUES (?, CURRENT_TIMESTAMP)");
+                psInsert.setString(1, email);
+                psInsert.executeUpdate();
+                psInsert.close();
             }
 
-            String action = request.getParameter("action");
+            rs.close();
+            psCheck.close();
+            con.close();
 
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project2", "root", "1234");
+            response.sendRedirect("CheckInOutServlet");
 
-                if ("checkin".equals(action)) {
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO attendance (email, checkin_time) VALUES (?, NOW())");
-                    ps.setString(1, email);
-                    ps.executeUpdate();
-                    ps.close();
-                } else if ("checkout".equals(action)) {
-                    PreparedStatement ps = con.prepareStatement(
-                        "UPDATE attendance SET checkout_time = NOW() WHERE email = ? AND checkout_time IS NULL ORDER BY id DESC LIMIT 1"
-                    );
-                    ps.setString(1, email);
-                    ps.executeUpdate();
-                    ps.close();
-                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-			
-			con.close();
-			response.sendRedirect("CheckInOutServlet");
-
-			}
-			catch (Exception exception) {
-				System.out.println(exception);
-			}
-
-	}
 
 }

@@ -48,7 +48,6 @@ public class LoginServlet extends HttpServlet {
 			ps.setString(1, email);
 			ps.setString(2, password);
 			
-			// Store Select
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {

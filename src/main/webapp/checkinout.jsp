@@ -12,14 +12,8 @@
 <h2>User: <c:out value="${email}" /></h2>
 <h3>Status: <c:out value="${status}" /></h3>
 
-<c:if test="${status eq 'Checked In'}">
-    <p>Checked in at: <c:out value="${checkinDisplay}" /></p>
-</c:if>
-
-<c:if test="${status eq 'Checked Out'}">
-    <p>Checked in at: <c:out value="${checkinDisplay}" /></p>
-    <p>Checked out at: <c:out value="${checkoutDisplay}" /></p>
-</c:if>
+<p>Checked in at: <c:out value="${checkinDisplay}" /></p>
+<p>Checked out at: <c:out value="${checkoutDisplay}" /></p>
 
 <c:if test="${showCheckIn}">
     <form action="CheckInOutServlet" method="post">
