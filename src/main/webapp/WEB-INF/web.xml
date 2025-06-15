@@ -29,5 +29,30 @@
 	  <servlet-name>AttendanceHistoryServlet</servlet-name>
 	  <url-pattern>/AttendanceHistory</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+	    <servlet-name>UserServlet</servlet-name>
+	    <servlet-class>com.dvops.maven.eclipse.UserServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	    <servlet-name>UserServlet</servlet-name>
+	    <url-pattern>/user-management</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	    <servlet-name>UserServlet</servlet-name>
+	    <url-pattern>/edit-user</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	    <servlet-name>UserServlet</servlet-name>
+	    <url-pattern>/update-user</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	    <servlet-name>UserServlet</servlet-name>
+	    <url-pattern>/delete-user</url-pattern>
+	</servlet-mapping>
 
 </web-app>

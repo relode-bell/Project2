@@ -11,6 +11,11 @@
     <ul>
         <li><a href="CheckInOutServlet">Check In / Out</a></li>
         <li><a href="AttendanceHistory">Attendance Page</a></li>
+        <li><a href="user-management">User Management</a></li>
     </ul>
+    
+    <form action="index.jsp" method="get">
+        <input type="submit" value="Logout" />
+    </form>
 </body>
 </html>
