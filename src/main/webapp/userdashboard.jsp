@@ -4,10 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>User Dashboard</title>
 </head>
 <body>
-   <h2>Welcome, <%= email %>!</h2>
-    <p>This is your dashboard.</p>
+   <h1>Welcome</h1>
+    <ul>
+        <li><a href="checkinout.jsp">Check In / Out</a></li>
+        <li><a href="attendancehistory.jsp">Attendance History</a></li>
+    </ul>
 </body>
 </html>
